@@ -31,12 +31,23 @@ function App() {
     }
   };
 
+  const prices = new Array(10).fill('29,90').map((price, index) => ({
+    text: price,
+    x: 50, // Defina a posição X inicial
+    y: 500 + index * 50 // Define a posição Y, espaçando verticalmente
+  }));
+
   return (
     <div className="app">
       <form className="form-upload">
         <label className="input-personalizado">
           <span className="botao-selecionar">Selecione uma imagem</span>
-          <img className="imagem" />
+          <img
+            className="imagem"
+            src={imageSource}
+            alt="Pré-visualização"
+            style={{ display: imageSource ? 'block' : 'none' }}
+          />
           <input
             className="input-file"
             type="file"
@@ -52,16 +63,20 @@ function App() {
         <div style={{ width: '99vw', height: '95vh' }}>
           <FilerobotImageEditor
             source={imageSource}
-            // Também dá pra adicionar a url direto em source=""
             onSave={(editedImageObject, designState) =>
               console.log('imagem salva', editedImageObject, designState)
             }
             onClose={closeImgEditor}
             annotationsCommon={{
-              fill: '#ff0000'
+              fill: '#ffffff' // Define a cor de preenchimento se necessário
             }}
-            Text={{ text: 'Filerobot...' }}
-            Rotate={{ angle: 90, componentType: 'slider' }}
+            Text={{
+              text: prices.map(price => price.text).join(' '), // Isso é apenas um exemplo
+              fontSize: 32,
+              fontStyle: 'bold',
+              lineHeight: 1.48
+            }}
+            Rotate={{ angle: 0, componentType: 'slider' }}
             tabsIds={[TABS.ADJUST, TABS.ANNOTATE, TABS.WATERMARK]}
             defaultTabId={TABS.ANNOTATE}
             defaultToolId={TOOLS.TEXT}
