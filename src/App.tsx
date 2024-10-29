@@ -3,64 +3,50 @@ import FilerobotImageEditor, {
   TABS,
   TOOLS
 } from 'react-filerobot-image-editor';
+import defaultImage from './assets/imgs/menu-tv-airton-base.png';
 
 function App() {
   const [isImgEditorShown, setIsImgEditorShown] = useState(false);
-  const [imageSource, setImageSource] = useState<string>(''); // Define o tipo como string
+  const [imageSource] = useState<string>(defaultImage); // Define imagem padrão
 
   const openImgEditor = () => {
-    if (imageSource) {
-      setIsImgEditorShown(true);
-    } else {
-      alert('Por favor, adicione uma imagem antes de abrir o editor.');
-    }
+    setIsImgEditorShown(true);
   };
 
   const closeImgEditor = () => {
     setIsImgEditorShown(false);
   };
 
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImageSource(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+  // Lista de preços específica
+  const priceValues = [
+    '29,99',
+    '22,99',
+    '29,99',
+    '34,99',
+    '17,99',
+    '29,99',
+    '16,99',
+    '29,99',
+    '17,99',
+    '29,99'
+  ];
 
-  const prices = new Array(10).fill('29,90').map((price, index) => ({
+  // Mapeia os preços para um formato de anotação
+  const prices = priceValues.map((price, index) => ({
     text: price,
-    x: 50, // Defina a posição X inicial
-    y: 500 + index * 50 // Define a posição Y, espaçando verticalmente
+    x: 50,
+    y: 500 + index * 50,
+    fontSize: 26, // Define tamanho padrão da fonte
+    fontStyle: 'bold', // Define a font como bold
+    lineHeight: 1.41 // Define altura entre cada texto
   }));
 
   return (
     <div className="app">
-      <form className="form-upload">
-        <label className="input-personalizado">
-          <span className="botao-selecionar">Selecione uma imagem</span>
-          <img
-            className="imagem"
-            src={imageSource}
-            alt="Pré-visualização"
-            style={{ display: imageSource ? 'block' : 'none' }}
-          />
-          <input
-            className="input-file"
-            type="file"
-            accept="image/*"
-            onChange={handleImageUpload}
-          />
-        </label>
-      </form>
-
       <button onClick={openImgEditor}>Abrir editor de imagem</button>
 
-      {isImgEditorShown && imageSource && (
-        <div style={{ width: '99vw', height: '95vh' }}>
+      {isImgEditorShown && (
+        <div style={{ width: '99vw', height: '79vh' }}>
           <FilerobotImageEditor
             source={imageSource}
             onSave={(editedImageObject, designState) =>
@@ -68,13 +54,13 @@ function App() {
             }
             onClose={closeImgEditor}
             annotationsCommon={{
-              fill: '#ffffff' // Define a cor de preenchimento se necessário
+              fill: '#ffffff' // Define a cor padrão do texto
             }}
             Text={{
-              text: prices.map(price => price.text).join(' '), // Isso é apenas um exemplo
-              fontSize: 32,
+              text: prices.map(price => price.text).join(' '), // Lista de preços inicial
+              fontSize: 26,
               fontStyle: 'bold',
-              lineHeight: 1.48
+              lineHeight: 1.41
             }}
             Rotate={{ angle: 0, componentType: 'slider' }}
             tabsIds={[TABS.ADJUST, TABS.ANNOTATE, TABS.WATERMARK]}
